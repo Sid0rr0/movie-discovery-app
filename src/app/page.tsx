@@ -22,37 +22,17 @@ export default function Home() {
   }, []);
 
   return (
-    <div style={{ 
-      padding: "20px",
-      maxWidth: "1200px",
-      margin: "0 auto",
-      backgroundColor: "#111",
-      minHeight: "100vh",
-      color: "white"
-    }}>
-      
-      <div style={{ 
-        display: "flex", 
-        flexDirection: "column", 
-        gap: "30px",
-        width: "100%" 
-      }}>
-        test
+    <div className="p-5 max-w-6xl mx-auto bg-gray-900 min-h-screen text-white">
+
+      <div className="flex flex-col gap-8 w-full">
         {movies && movies.map((movie, index) => (
           <div 
             key={movie.id || index} 
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              padding: "15px",
-              borderRadius: "8px",
-              backgroundColor: "#222",
-              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)"
-            }}
+            className="flex flex-col p-4 rounded-lg bg-gray-800"
           >
-            <h2 style={{ marginBottom: "15px" }}>{movie.title}</h2>
+            <h2 className="mb-4">{movie.title}</h2>
             {movie.backdrop_path && (
-              <div style={{ position: "relative", height: "250px", width: "100%" }}>
+              <div className="w-full">
                 <Image
                   src={`https://image.tmdb.org/t/p/w500/${movie.backdrop_path}`}
                   alt={movie.title || "Movie Poster"}
