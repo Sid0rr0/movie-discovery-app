@@ -1,11 +1,11 @@
 
 'use client'
 
-import { Card } from '@/components/Card';
+import { Card } from '@/components/MovieCard';
 import { Pagination } from '@/components/Pagination';
 import { fetchMovies } from '@/lib/fetchMovies';
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 
 import Image from "next/image";
 import { useState } from "react";
@@ -16,7 +16,7 @@ export default function Home() {
   const { data, isLoading, isError, isFetching } = useQuery({
     queryKey: ['movies', page],
     queryFn: () => fetchMovies(page),
-    
+    placeholderData: keepPreviousData
   })
 
   if (isLoading) return <p>Loading...</p>
@@ -28,7 +28,8 @@ export default function Home() {
       <div className="flex flex-col md:flex-row gap-6 w-full flex-wrap">
         {data?.results && data.results.map((movie, index) => (
           <Card 
-            key={movie.id || index} 
+            key={movie.id || index}
+            movieId={movie.id || 1}
             title={movie.title || "Untitled"}
           >
             <div className='flex justify-between mb-4'>
