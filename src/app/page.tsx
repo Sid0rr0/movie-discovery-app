@@ -1,6 +1,7 @@
 
 'use client'
 
+import { Card } from '@/components/Card';
 import type { DiscoverMovieResponse, DiscoverMovieResult } from '@/types'
 
 import Image from "next/image";
@@ -22,26 +23,29 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="p-5 max-w-6xl mx-auto bg-gray-900 min-h-screen text-white">
-
-      <div className="flex flex-col gap-8 w-full">
+    <div className="p-5 max-w-6xl mx-auto bg-gray-900 min-h-screen text-white flex flex-col items-center">
+      <h1 className='mb-8 text-3xl font-bold'>Movie Discovery App</h1>
+      <div className="flex flex-col md:flex-row gap-6 w-full flex-wrap">
         {movies && movies.map((movie, index) => (
-          <div 
+          <Card 
             key={movie.id || index} 
-            className="flex flex-col p-4 rounded-lg bg-gray-800"
+            title={movie.title || "Untitled"}
           >
-            <h2 className="mb-4">{movie.title}</h2>
+            <div className='flex justify-between mb-4'>
+              <span>Average rating: {movie.vote_average}</span>
+              <span>Release year: {movie.release_date?.substring(0, 4)}</span>
+            </div>
             {movie.backdrop_path && (
               <div className="w-full">
                 <Image
-                  src={`https://image.tmdb.org/t/p/w500/${movie.backdrop_path}`}
+                  src={`https://image.tmdb.org/t/p/w300/${movie.backdrop_path}`}
                   alt={movie.title || "Movie Poster"}
-                  width={500}
-                  height={281}
+                  width={300}
+                  height={169}
                 />
               </div>
             )}
-          </div>
+          </Card>
         ))}
       </div>
     </div>
