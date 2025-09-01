@@ -48,8 +48,8 @@ function MovieDetails({ movieId }: { movieId: number }) {
         {' '}
         {data?.release_date}
       </p>
-      <h3 className="text-lg font-semibold">Similar Movies:</h3>
-      <div className="mt-4 flex flex-col max-h-32 overflow-y-scroll">
+      <h3 className="text-lg mt-8 font-semibold">Similar Movies:</h3>
+      <div className="mt-2 flex flex-col max-h-32 overflow-y-scroll">
         {similarMovies?.results && similarMovies?.results.map(movie => (
           <div key={movie.id} className="mb-4">
             {movie.title}
@@ -60,6 +60,25 @@ function MovieDetails({ movieId }: { movieId: number }) {
           </div>
         ))}
       </div>
+    </div>
+  )
+}
+
+function MovieImage({ movie }: { movie: Movie }) {
+  return (
+    <div className="w-[300px] h-[169px] bg-gray-700 flex items-center justify-center">
+      {movie.backdrop_path
+        ? (
+          <Image
+            src={`https://image.tmdb.org/t/p/w300/${movie.backdrop_path}`}
+            alt={movie.title || 'Movie Poster'}
+            width={300}
+            height={169}
+          />
+        )
+        : (
+          <div>No Image Available</div>
+        )}
     </div>
   )
 }
@@ -79,20 +98,7 @@ function MovieCardDetails({ movie }: { movie: Movie }) {
           {movie.release_date?.substring(0, 4)}
         </span>
       </div>
-      <div className="w-[300px] h-[169px] bg-gray-700 flex items-center justify-center">
-        {movie.backdrop_path
-          ? (
-            <Image
-              src={`https://image.tmdb.org/t/p/w300/${movie.backdrop_path}`}
-              alt={movie.title || 'Movie Poster'}
-              width={300}
-              height={169}
-            />
-          )
-          : (
-            <div>No Image Available</div>
-          )}
-      </div>
+      <MovieImage movie={movie} />
     </>
   )
 }
@@ -125,6 +131,8 @@ export function MovieCard({ movie, pauseTimer }: CardProps) {
             <DialogHeader>
               <DialogTitle className="text-white">{movie.title}</DialogTitle>
             </DialogHeader>
+
+            <MovieImage movie={movie} />
 
             <Suspense fallback={<p className="text-white">Loading...</p>}>
               {open && <MovieDetails movieId={movie.id} />}
