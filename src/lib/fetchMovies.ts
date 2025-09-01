@@ -32,3 +32,11 @@ export const fetchMovieDetails = async (params: MovieDetailsParams): Promise<Mov
 
   return res.data
 }
+
+export const fetchSimilarMovies = async (params: MovieDetailsParams): Promise<DiscoverMovieResponse> => {
+  const res = await axios.get(`${BASE_URL}/movie/${params.movie_id}/similar`, {
+    params: { api_key: API_KEY },
+  })
+
+  return res.data
+}

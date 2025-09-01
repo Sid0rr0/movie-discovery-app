@@ -1,6 +1,6 @@
 'use client'
 
-import { Card } from '@/components/MovieCard'
+import { MovieCard } from '@/components/MovieCard'
 import { MovieFilters } from '@/components/MovieFilters'
 import { Pagination } from '@/components/Pagination'
 import { fetchGenres, fetchMovies } from '@/lib/fetchMovies'
@@ -8,7 +8,6 @@ import { DiscoverMovieParams } from '@/types'
 
 import { useQuery, keepPreviousData } from '@tanstack/react-query'
 
-import Image from 'next/image'
 import { useState } from 'react'
 
 export default function Home() {
@@ -36,40 +35,13 @@ export default function Home() {
 
       <MovieFilters genres={genres || []} onApply={setFilters} />
 
-      <div className="flex flex-col md:flex-row gap-6 w-full flex-wrap mt-4">
+      <div className="flex flex-col md:flex-row gap-6 w-full flex-wrap mt-4 justify-center">
         {data?.results && data.results.map((movie, index) => (
-          <Card
+          <MovieCard
             key={movie.id || index}
-            movieId={movie.id || 1}
-            title={movie.title || 'Untitled'}
-          >
-            <div className="flex justify-between mb-4 gap-4">
-              <span>
-                Average rating:
-                {' '}
-                {movie.vote_average}
-              </span>
-              <span>
-                Release year:
-                {' '}
-                {movie.release_date?.substring(0, 4)}
-              </span>
-            </div>
-            <div className="w-[300px] h-[169px] bg-gray-700 flex items-center justify-center">
-              {movie.backdrop_path
-                ? (
-                  <Image
-                    src={`https://image.tmdb.org/t/p/w300/${movie.backdrop_path}`}
-                    alt={movie.title || 'Movie Poster'}
-                    width={300}
-                    height={169}
-                  />
-                )
-                : (
-                  <div>No Image Available</div>
-                )}
-            </div>
-          </Card>
+            movie={movie}
+          />
+
         ))}
       </div>
 
