@@ -1,5 +1,5 @@
-import React, { ReactNode, useState } from "react";
-import { Card as SCard, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { ReactNode, useState } from 'react'
+import { Card as SCard, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 import {
   Dialog,
@@ -8,26 +8,25 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { useQuery } from "@tanstack/react-query";
-import { fetchMovieDetails } from "@/lib/fetchMovies";
-import { MovieDetailsSingleGenre } from "@/types";
+} from '@/components/ui/dialog'
+import { useQuery } from '@tanstack/react-query'
+import { fetchMovieDetails } from '@/lib/fetchMovies'
+import { MovieDetailsSingleGenre } from '@/types'
 
 interface CardProps {
-  title: string;
-  movieId: number;
-  children: ReactNode;
+  title: string
+  movieId: number
+  children: ReactNode
 }
 
 export function Card({ title, movieId, children }: CardProps) {
-
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["movie", movieId],
+    queryKey: ['movie', movieId],
     queryFn: () => fetchMovieDetails({ movie_id: movieId }),
     enabled: open, // only fetch when dialog is open
-  });
+  })
 
   return (
     <SCard className="flex flex-col py-4 rounded-lg bg-gray-800">
@@ -52,12 +51,21 @@ export function Card({ title, movieId, children }: CardProps) {
 
             {data && (
               <div className="mt-2 space-y-2">
-                <p><strong>Overview:</strong> {data.overview}</p>
                 <p>
-                  <strong>Genres:</strong>{" "}
-                  {data.genres?.map((g: MovieDetailsSingleGenre) => g.name).join(", ")}
+                  <strong>Overview:</strong>
+                  {' '}
+                  {data.overview}
                 </p>
-                <p><strong>Release Date:</strong> {data.release_date}</p>
+                <p>
+                  <strong>Genres:</strong>
+                  {' '}
+                  {data.genres?.map((g: MovieDetailsSingleGenre) => g.name).join(', ')}
+                </p>
+                <p>
+                  <strong>Release Date:</strong>
+                  {' '}
+                  {data.release_date}
+                </p>
               </div>
             )}
 
@@ -68,5 +76,5 @@ export function Card({ title, movieId, children }: CardProps) {
         </Dialog>
       </CardContent>
     </SCard>
-  );
+  )
 }

@@ -21,7 +21,8 @@ const eslintConfig = [
       '@stylistic/indent': ['error', 2],
       // ...
     }
-  }
+  },
+  stylistic.configs.recommended,
 ];
 
 export default eslintConfig;

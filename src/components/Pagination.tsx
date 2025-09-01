@@ -24,7 +24,13 @@ export function Pagination({
       </button>
 
       <span className="px-4 py-2">
-        Page {page} of {totalPages}
+        Page
+        {' '}
+        {page}
+        {' '}
+        of
+        {' '}
+        {totalPages}
       </span>
 
       <button
