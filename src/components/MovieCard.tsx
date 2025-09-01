@@ -16,6 +16,7 @@ import type { Movie, MovieDetailsSingleGenre } from '@/types'
 
 interface CardProps {
   movie: Movie
+  pauseTimer: (_open: boolean) => void
 }
 
 // Separate component for Suspense
@@ -63,7 +64,7 @@ function MovieDetails({ movieId }: { movieId: number }) {
   )
 }
 
-function MovieCardDetails({ movie }: CardProps) {
+function MovieCardDetails({ movie }: { movie: Movie }) {
   return (
     <>
       <div className="flex justify-between mb-4 gap-4">
@@ -81,23 +82,28 @@ function MovieCardDetails({ movie }: CardProps) {
       <div className="w-[300px] h-[169px] bg-gray-700 flex items-center justify-center">
         {movie.backdrop_path
           ? (
-              <Image
-                src={`https://image.tmdb.org/t/p/w300/${movie.backdrop_path}`}
-                alt={movie.title || 'Movie Poster'}
-                width={300}
-                height={169}
-              />
-            )
+            <Image
+              src={`https://image.tmdb.org/t/p/w300/${movie.backdrop_path}`}
+              alt={movie.title || 'Movie Poster'}
+              width={300}
+              height={169}
+            />
+          )
           : (
-              <div>No Image Available</div>
-            )}
+            <div>No Image Available</div>
+          )}
       </div>
     </>
   )
 }
 
-export function MovieCard({ movie }: CardProps) {
+export function MovieCard({ movie, pauseTimer }: CardProps) {
   const [open, setOpen] = useState(false)
+
+  const handleOpen = (open: boolean) => {
+    pauseTimer(open)
+    setOpen(open)
+  }
 
   return (
     <SCard className="flex flex-col py-4 rounded-lg bg-gray-800">
@@ -107,10 +113,10 @@ export function MovieCard({ movie }: CardProps) {
         </CardTitle>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="mt-auto">
         <MovieCardDetails movie={movie} />
 
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={open} onOpenChange={handleOpen}>
           <DialogTrigger className="mt-4 px-3 w-full py-1 bg-blue-600 text-white rounded cursor-pointer">
             Show details
           </DialogTrigger>
