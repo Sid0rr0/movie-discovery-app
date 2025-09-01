@@ -2,31 +2,31 @@
 'use client'
 
 import { Card } from '@/components/Card';
-import type { DiscoverMovieResponse, DiscoverMovieResult } from '@/types'
+import { Pagination } from '@/components/Pagination';
+import { fetchMovies } from '@/lib/fetchMovies';
+
+import { useQuery } from '@tanstack/react-query';
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function Home() {
-  const [movies, setMovies] = useState<DiscoverMovieResult | null>(null);
+  const [page, setPage] = useState(1)
 
-  useEffect(() => {
-    const fetchMovies = async () => {
-      // const newMovies = [];
-      const options = {method: 'GET', headers: {accept: 'application/json'}};
-      const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=5118448f0df78266f8f992a2967ddfd1&include_adult=false`, options);
-      const data = await response.json() as DiscoverMovieResponse;
-      setMovies(data.results);
-    };
+  const { data, isLoading, isError, isFetching } = useQuery({
+    queryKey: ['movies', page],
+    queryFn: () => fetchMovies(page),
     
-    fetchMovies();
-  }, []);
+  })
+
+  if (isLoading) return <p>Loading...</p>
+  if (isError) return <p>Error loading movies</p>
 
   return (
     <div className="p-5 max-w-6xl mx-auto bg-gray-900 min-h-screen text-white flex flex-col items-center">
       <h1 className='mb-8 text-3xl font-bold'>Movie Discovery App</h1>
       <div className="flex flex-col md:flex-row gap-6 w-full flex-wrap">
-        {movies && movies.map((movie, index) => (
+        {data?.results && data.results.map((movie, index) => (
           <Card 
             key={movie.id || index} 
             title={movie.title || "Untitled"}
@@ -48,6 +48,13 @@ export default function Home() {
           </Card>
         ))}
       </div>
+
+      <Pagination
+        page={page}
+        totalPages={data?.total_pages ?? 1}
+        onPageChange={setPage}
+        isFetching={isFetching}
+      />
     </div>
   );
 }
