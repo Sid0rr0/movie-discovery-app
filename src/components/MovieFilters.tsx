@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Slider } from '@/components/ui/slider'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { DiscoverMovieParams } from '@/types'
+import MultipleSelector, { Option } from '@/components/ui/MultipleSelector'
 
 interface MovieFiltersProps {
   genres: { id: number, name?: string }[]
@@ -19,13 +20,19 @@ interface MovieFiltersProps {
 }
 
 export function MovieFilters({ genres, onApply }: MovieFiltersProps) {
-  const [selectedGenres, setSelectedGenres] = useState<number[]>([])
+  const [selectedGenres, setSelectedGenres] = useState<Option[]>([])
   const [releaseYearRange, setReleaseYearRange] = useState<[number, number]>([2000, 2025])
   const [minRating, setMinRating] = useState<number>(0)
 
   const applyFilters = () => {
     const filters: DiscoverMovieParams = {
-      'with_genres': selectedGenres.join(',') || undefined,
+      'with_genres': selectedGenres.reduce((acc, curr) => {
+        if (curr.value) {
+          if (acc === '') return curr.value
+          acc += `,${curr.value}`
+        }
+        return acc
+      }, '') || undefined,
       'primary_release_date.gte': `${releaseYearRange[0]}-01-01`,
       'primary_release_date.lte': `${releaseYearRange[1]}-12-31`,
       'vote_average.gte': minRating,
@@ -33,11 +40,23 @@ export function MovieFilters({ genres, onApply }: MovieFiltersProps) {
     onApply(filters)
   }
 
+  const genreOptions: Option[] = useMemo(() => genres.map(g => ({ value: g.id.toString(), label: g.name || 'Unknown' })), [genres])
+
   return (
     <div className="flex flex-col md:flex-row gap-8 w-full justify-around items-center p-4 bg-gray-800 rounded-lg text-white">
       {/* Genres Multi-Select */}
       <div>
         <Label className="mb-2 block font-semibold">Genres</Label>
+        <MultipleSelector
+          value={selectedGenres}
+          onChange={setSelectedGenres}
+          defaultOptions={genreOptions}
+          emptyIndicator={(
+            <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
+              no results found.
+            </p>
+          )}
+        />
       </div>
 
       {/* Release Year Range */}

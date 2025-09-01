@@ -46,23 +46,29 @@ export default function Home() {
             <div className="flex justify-between mb-4 gap-4">
               <span>
                 Average rating:
+                {' '}
                 {movie.vote_average}
               </span>
               <span>
                 Release year:
+                {' '}
                 {movie.release_date?.substring(0, 4)}
               </span>
             </div>
-            {movie.backdrop_path && (
-              <div className="w-full">
-                <Image
-                  src={`https://image.tmdb.org/t/p/w300/${movie.backdrop_path}`}
-                  alt={movie.title || 'Movie Poster'}
-                  width={300}
-                  height={169}
-                />
-              </div>
-            )}
+            <div className="w-[300px] h-[169px] bg-gray-700 flex items-center justify-center">
+              {movie.backdrop_path
+                ? (
+                  <Image
+                    src={`https://image.tmdb.org/t/p/w300/${movie.backdrop_path}`}
+                    alt={movie.title || 'Movie Poster'}
+                    width={300}
+                    height={169}
+                  />
+                )
+                : (
+                  <div>No Image Available</div>
+                )}
+            </div>
           </Card>
         ))}
       </div>
